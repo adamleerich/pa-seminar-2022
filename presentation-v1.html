@@ -3350,38 +3350,30 @@ brvehins1a &lt;- as_tibble(brvehins1a)</pre>
 
 <p>When printed to the console, tibbles generate output that is more user friendly than data frames when the data set is large.</p>
 
-<pre class = 'prettyprint lang-r'>print(brvehins1a)
-## # A tibble: 393,071 x 23
-##    Gender    DrivAge VehYear VehModel    VehGroup Area  State StateAb ExposTotal
-##    &lt;fct&gt;     &lt;fct&gt;     &lt;int&gt; &lt;fct&gt;       &lt;fct&gt;    &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;        &lt;dbl&gt;
-##  1 Female    &gt;55        1997 Gm - Chevr~ Gm Chev~ Inte~ Rio ~ RJ            1.01
-##  2 Female    36-45      2010 Gm - Chevr~ Gm Chev~ Mara~ Mara~ MA            3   
-##  3 Female    18-25      2008 Vw - Volks~ Vw Volk~ Mato~ Mato~ MS            1.01
-##  4 Male      &gt;55        2004 Harley-dav~ Harley-~ Met.~ Rio ~ RS            1.45
-##  5 Male      36-45      2009 Volvo - Fh~ Volvo C~ Ribe~ Sao ~ SP            4.55
-##  6 Male      26-35      1998 Vw - Volks~ Vw Volk~ Met.~ Rio ~ RS            1   
-##  7 Male      18-25      1999 Gm - Chevr~ Gm Chev~ Gran~ Sao ~ SP            1.01
-##  8 Corporate &lt;NA&gt;       2006 Honda - Cg~ Honda M~ Vale~ Sao ~ SP            1.51
-##  9 Male      36-45      2010 Volvo - C3~ Volvo -~ Tria~ Mina~ MG            0.25
-## 10 Female    26-35      2002 Fiat - Uno~ Fiat Un~ Dema~ Rio ~ RS            0.93
-## # ... with 393,061 more rows, and 14 more variables: ExposFireRob &lt;dbl&gt;,
-## #   PremTotal &lt;dbl&gt;, PremFireRob &lt;dbl&gt;, SumInsAvg &lt;dbl&gt;, ClaimNbRob &lt;dbl&gt;,
-## #   ClaimNbPartColl &lt;dbl&gt;, ClaimNbTotColl &lt;dbl&gt;, ClaimNbFire &lt;dbl&gt;,
-## #   ClaimNbOther &lt;dbl&gt;, ClaimAmountRob &lt;dbl&gt;, ClaimAmountPartColl &lt;dbl&gt;,
-## #   ClaimAmountTotColl &lt;dbl&gt;, ClaimAmountFire &lt;dbl&gt;, ClaimAmountOther &lt;dbl&gt;</pre>
+<pre class = 'prettyprint lang-r'>print(brvehins1a)</pre>
 
-</article></slide><slide class=""><hgroup><h2>Options for printing</h2></hgroup><article  id="options-for-printing" class="smaller ">
-
-<pre class = 'prettyprint lang-r'>options(&quot;tibble.print_min&quot; = 5)
-options(&quot;tibble.print_max&quot; = 5)
-options(&quot;tibble.max_footer_lines&quot; = 1)
-options(&quot;tibble.width&quot; = 60)</pre>
+<pre >## # A tibble: 393,071 x 23
+##   Gender DrivAge VehYear VehModel       VehGroup Area  State
+##   &lt;fct&gt;  &lt;fct&gt;     &lt;int&gt; &lt;fct&gt;          &lt;fct&gt;    &lt;fct&gt; &lt;fct&gt;
+## 1 Female &gt;55        1997 Gm - Chevrole~ Gm Chev~ Inte~ Rio ~
+## 2 Female 36-45      2010 Gm - Chevrole~ Gm Chev~ Mara~ Mara~
+## 3 Female 18-25      2008 Vw - Volkswag~ Vw Volk~ Mato~ Mato~
+## 4 Male   &gt;55        2004 Harley-davids~ Harley-~ Met.~ Rio ~
+## 5 Male   36-45      2009 Volvo - Fh 44~ Volvo C~ Ribe~ Sao ~
+## # ... with 393,066 more rows, and 16 more variables:
+## #   StateAb &lt;fct&gt;, ExposTotal &lt;dbl&gt;, ExposFireRob &lt;dbl&gt;,
+## #   PremTotal &lt;dbl&gt;, PremFireRob &lt;dbl&gt;, SumInsAvg &lt;dbl&gt;,
+## #   ClaimNbRob &lt;dbl&gt;, ClaimNbPartColl &lt;dbl&gt;,
+## #   ClaimNbTotColl &lt;dbl&gt;, ClaimNbFire &lt;dbl&gt;,
+## #   ClaimNbOther &lt;dbl&gt;, ClaimAmountRob &lt;dbl&gt;,
+## #   ClaimAmountPartColl &lt;dbl&gt;, ...</pre>
 
 </article></slide><slide class=""><hgroup><h2>Select columns using <code>select</code></h2></hgroup><article  id="select-columns-using-select" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
-  select(ExposTotal, PremTotal)
-## # A tibble: 393,071 x 2
+  select(ExposTotal, PremTotal)</pre>
+
+<pre >## # A tibble: 393,071 x 2
 ##   ExposTotal PremTotal
 ##        &lt;dbl&gt;     &lt;dbl&gt;
 ## 1       1.01      743.
@@ -3399,8 +3391,9 @@ options(&quot;tibble.width&quot; = 60)</pre>
 <p>You can only remove columns that actually exist.</p>
 
 <pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
-  select(-DriverAge)
-## Error in `select()`:
+  select(-DriverAge)</pre>
+
+<pre >## Error in `select()`:
 ## ! Can&#39;t subset columns that don&#39;t exist.
 ## x Column `DriverAge` doesn&#39;t exist.</pre>
 
@@ -3415,8 +3408,9 @@ options(&quot;tibble.width&quot; = 60)</pre>
 
 <pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
   pull(PremTotal, Gender) %&gt;% 
-  head
-##   Female   Female   Female     Male     Male     Male 
+  head</pre>
+
+<pre >##   Female   Female   Female     Male     Male     Male 
 ##   742.75  5025.68   916.26  1601.68 53031.35   660.59</pre>
 
 </article></slide><slide class=""><hgroup><h2>Helper functions for <code>select</code></h2></hgroup><article  id="helper-functions-for-select" class="smaller ">
@@ -3432,26 +3426,12 @@ options(&quot;tibble.width&quot; = 60)</pre>
 <li><code>everything</code></li>
 </ul>
 
+</article></slide><slide class=""><hgroup><h2>Helper function examples</h2></hgroup><article  id="helper-function-examples" class="smaller ">
+
 <pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
   select(contains(&#39;Veh&#39;))
-## # A tibble: 393,071 x 3
-##    VehYear VehModel                                                   VehGroup  
-##      &lt;int&gt; &lt;fct&gt;                                                      &lt;fct&gt;     
-##  1    1997 Gm - Chevrolet - Kadett Gl 2.0 Mpfi / Efi                  Gm Chevro~
-##  2    2010 Gm - Chevrolet - Montana 1.4 8v Conquest Econoflex  2p     Gm Chevro~
-##  3    2008 Vw - Volkswagen - Fox City 1.0mi/ 1.0mi Total Flex 8v 3p   Vw Volksw~
-##  4    2004 Harley-davidson - Fat Boy                                  Harley-da~
-##  5    2009 Volvo - Fh 440 6x2 2p (diesel)                             Volvo Cam~
-##  6    1998 Vw - Volkswagen - Gol Gl 1.6 Mi/star 1.6 E 1.8/atlanta 1.6 Vw Volksw~
-##  7    1999 Gm - Chevrolet - Corsa Sedan Super 1.0 Mpfi 4p             Gm Chevro~
-##  8    2006 Honda - Cg 150 Titan-esd/ Titan Special Edition            Honda Mot~
-##  9    2010 Volvo - C30 2.0 145cv                                      Volvo - O~
-## 10    2002 Fiat - Uno Mille 1.0 Fire/ F.flex/ Economy 4p              Fiat Uno ~
-## # ... with 393,061 more rows</pre>
 
-</article></slide><slide class=""><hgroup><h2>More helper function examples</h2></hgroup><article  id="more-helper-function-examples" class="smaller ">
-
-<pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
+brvehins1a %&gt;% 
   select(ends_with(&#39;Total&#39;))
 
 brvehins1a %&gt;% 
@@ -3462,17 +3442,210 @@ brvehins1a %&gt;%
 
 </article></slide><slide class=""><hgroup><h2>Extract rows using <code>filter</code></h2></hgroup><article  id="extract-rows-using-filter" class="smaller ">
 
+<p>Any function that returns a vector of <code>TRUE</code> and <code>FALSE</code> values works.</p>
+
+<ul>
+<li><code>==</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, etc.</li>
+<li><code>is.na</code></li>
+<li><code>%in%</code></li>
+<li><code>stringr::str_detect</code> and <code>stringr::str_starts</code></li>
+<li>And many more</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Simple examples</h2></hgroup><article  id="simple-examples" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
+  filter(Gender == &#39;Male&#39;)</pre>
+
+<pre >## # A tibble: 171,089 x 23
+##   Gender DrivAge VehYear VehModel       VehGroup Area  State
+##   &lt;fct&gt;  &lt;fct&gt;     &lt;int&gt; &lt;fct&gt;          &lt;fct&gt;    &lt;fct&gt; &lt;fct&gt;
+## 1 Male   &gt;55        2004 Harley-davids~ Harley-~ Met.~ Rio ~
+## 2 Male   36-45      2009 Volvo - Fh 44~ Volvo C~ Ribe~ Sao ~
+## 3 Male   26-35      1998 Vw - Volkswag~ Vw Volk~ Met.~ Rio ~
+## 4 Male   18-25      1999 Gm - Chevrole~ Gm Chev~ Gran~ Sao ~
+## 5 Male   36-45      2010 Volvo - C30 2~ Volvo -~ Tria~ Mina~
+## # ... with 171,084 more rows, and 16 more variables:
+## #   StateAb &lt;fct&gt;, ExposTotal &lt;dbl&gt;, ExposFireRob &lt;dbl&gt;,
+## #   PremTotal &lt;dbl&gt;, PremFireRob &lt;dbl&gt;, SumInsAvg &lt;dbl&gt;,
+## #   ClaimNbRob &lt;dbl&gt;, ClaimNbPartColl &lt;dbl&gt;,
+## #   ClaimNbTotColl &lt;dbl&gt;, ClaimNbFire &lt;dbl&gt;,
+## #   ClaimNbOther &lt;dbl&gt;, ClaimAmountRob &lt;dbl&gt;,
+## #   ClaimAmountPartColl &lt;dbl&gt;, ...</pre>
+
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
+  filter(
+    PremTotal &gt; 250e3,
+    VehYear == 2011,
+    Gender != &#39;Corporate&#39;)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Using <code>stringr</code> functions with <code>filter</code></h2></hgroup><article  id="using-stringr-functions-with-filter" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
+  filter(
+    PremTotal &gt; 250e3,
+    VehYear == 2011,
+    !str_starts(Gender, &#39;C|c&#39;))</pre>
+
+<pre >## # A tibble: 12 x 23
+##   Gender DrivAge VehYear VehModel       VehGroup Area  State
+##   &lt;fct&gt;  &lt;fct&gt;     &lt;int&gt; &lt;fct&gt;          &lt;fct&gt;    &lt;fct&gt; &lt;fct&gt;
+## 1 Female 26-35      2011 Ford - Ka 1.0~ Ford Ka~ Met.~ Sao ~
+## 2 Female 26-35      2011 Outros         Outros   Goias Goias
+## 3 Female 46-55      2011 Outros         Outros   Met.~ Sao ~
+## 4 Male   &gt;55        2011 Outros         Outros   Pern~ Pern~
+## 5 Male   36-45      2011 Vw - Volkswag~ Vw Volk~ Ribe~ Sao ~
+## # ... with 7 more rows, and 16 more variables:
+## #   StateAb &lt;fct&gt;, ExposTotal &lt;dbl&gt;, ExposFireRob &lt;dbl&gt;,
+## #   PremTotal &lt;dbl&gt;, PremFireRob &lt;dbl&gt;, SumInsAvg &lt;dbl&gt;,
+## #   ClaimNbRob &lt;dbl&gt;, ClaimNbPartColl &lt;dbl&gt;,
+## #   ClaimNbTotColl &lt;dbl&gt;, ClaimNbFire &lt;dbl&gt;,
+## #   ClaimNbOther &lt;dbl&gt;, ClaimAmountRob &lt;dbl&gt;,
+## #   ClaimAmountPartColl &lt;dbl&gt;, ...</pre>
+
+</article></slide><slide class=""><hgroup><h2>Remove incomplete rows with <code>drop_na</code></h2></hgroup><article  id="remove-incomplete-rows-with-drop_na" class="smaller ">
+
 </article></slide><slide class=""><hgroup><h2>Extract rows using <code>slice</code></h2></hgroup><article  id="extract-rows-using-slice" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;%
+  select(ExposTotal, PremTotal) %&gt;% 
+  slice(10:11)</pre>
+
+<pre >## # A tibble: 2 x 2
+##   ExposTotal PremTotal
+##        &lt;dbl&gt;     &lt;dbl&gt;
+## 1       0.93      589.
+## 2      10.4     12908.</pre>
 
 </article></slide><slide class=""><hgroup><h2>Adding computed colums using <code>mutate</code></h2></hgroup><article  id="adding-computed-colums-using-mutate" class="smaller ">
 
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;%
+  select(ExposTotal, PremTotal) %&gt;% 
+  mutate(
+    PremPerExpos = PremTotal / ExposTotal,
+    PremPerExpos_e3 = PremPerExpos / 1000)</pre>
+
+<pre >## # A tibble: 393,071 x 4
+##   ExposTotal PremTotal PremPerExpos PremPerExpos_e3
+##        &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;           &lt;dbl&gt;
+## 1       1.01      743.         735.           0.735
+## 2       3        5026.        1675.           1.68 
+## 3       1.01      916.         907.           0.907
+## 4       1.45     1602.        1105.           1.10 
+## 5       4.55    53031.       11655.          11.7  
+## # ... with 393,066 more rows</pre>
+
 </article></slide><slide class=""><hgroup><h2>Rename columns using <code>rename</code></h2></hgroup><article  id="rename-columns-using-rename" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
+  select(DrivAge, State) %&gt;% 
+  rename(
+    DriverAge = DrivAge,
+    Province = State) %&gt;% 
+  filter(Province == &#39;Sao Paulo&#39;)</pre>
+
+<pre >## # A tibble: 91,983 x 2
+##   DriverAge Province 
+##   &lt;fct&gt;     &lt;fct&gt;    
+## 1 36-45     Sao Paulo
+## 2 18-25     Sao Paulo
+## 3 &lt;NA&gt;      Sao Paulo
+## 4 36-45     Sao Paulo
+## 5 &lt;NA&gt;      Sao Paulo
+## # ... with 91,978 more rows</pre>
 
 </article></slide><slide class=""><hgroup><h2>Summary data using <code>group_by</code> and <code>summarize</code></h2></hgroup><article  id="summary-data-using-group_by-and-summarize" class="smaller ">
 
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
+  group_by(State) %&gt;% 
+  summarize(
+    PremiumPerState = sum(PremTotal),
+    ExposuresPerState = sum(ExposTotal)) %&gt;% 
+  mutate(
+    AvgPremPerExposure = PremiumPerState / ExposuresPerState)</pre>
+
+<pre >## # A tibble: 28 x 4
+##   State    PremiumPerState ExposuresPerSta~ AvgPremPerExpos~
+##   &lt;fct&gt;              &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+## 1 Acre            1899093.            1120.            1696.
+## 2 Alagoas        10498583.            8473.            1239.
+## 3 Amapa           1044331.             626.            1670.
+## 4 Amazonas        6387090.            4737.            1348.
+## 5 Bahia          56739968.           44326.            1280.
+## # ... with 23 more rows</pre>
+
 </article></slide><slide class=""><hgroup><h2>Summarized counts using <code>n</code></h2></hgroup><article  id="summarized-counts-using-n" class="smaller ">
 
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
+  group_by(State) %&gt;% 
+  summarize(
+    StateCount = n()) %&gt;% 
+  filter()</pre>
+
+<pre >## # A tibble: 28 x 2
+##   State    StateCount
+##   &lt;fct&gt;         &lt;int&gt;
+## 1 Acre           1408
+## 2 Alagoas        4988
+## 3 Amapa           980
+## 4 Amazonas       3848
+## 5 Bahia         11520
+## # ... with 23 more rows</pre>
+
+</article></slide><slide class=""><hgroup><h2>Another grouping example</h2></hgroup><article  id="another-grouping-example" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
+  group_by(Gender) %&gt;% 
+  summarize(
+    Premium = sum(PremTotal),
+    Exposures = sum(ExposTotal))</pre>
+
+<pre >## # A tibble: 4 x 3
+##   Gender       Premium Exposures
+##   &lt;fct&gt;          &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Corporate 269541892.   149551.
+## 2 Female    496045301.   505905.
+## 3 Male      699937786.   597197.
+## 4 &lt;NA&gt;       14466031.     7938.</pre>
+
+</article></slide><slide class=""><hgroup><h2>Dealing with <code>NA</code> using <code>coalesce</code></h2></hgroup><article  id="dealing-with-na-using-coalesce" class="smaller ">
+
+<p>You can use <code>coalesce</code> anywhere, even outside of a <code>dplyr</code> pipe, to convert <code>NA</code> values to a default <em>in place</em> without having to use a more verbose option like <code>ifelse</code>.</p>
+
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
+  group_by(Gender) %&gt;% 
+  summarize(
+    Premium = sum(PremTotal),
+    Exposures = sum(ExposTotal)) %&gt;% 
+  mutate(Gender = coalesce(Gender, &#39;UNKNOWN&#39;))</pre>
+
+<pre >## # A tibble: 4 x 3
+##   Gender       Premium Exposures
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Corporate 269541892.   149551.
+## 2 Female    496045301.   505905.
+## 3 Male      699937786.   597197.
+## 4 UNKNOWN    14466031.     7938.</pre>
+
 </article></slide><slide class=""><hgroup><h2>Sort using <code>arrange</code></h2></hgroup><article  id="sort-using-arrange" class="smaller ">
+
+<p>Sort by a column in ascending or descending order. The following is descending. Use <code>arrange(&#39;Exposures&#39;)</code> to get the default ascending order.</p>
+
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
+  group_by(Gender) %&gt;% 
+  summarize(
+    Premium = sum(PremTotal),
+    Exposures = sum(ExposTotal)) %&gt;% 
+  mutate(Gender = coalesce(Gender, &#39;UNKNOWN&#39;)) %&gt;% 
+  arrange(desc(Exposures))</pre>
+
+<pre >## # A tibble: 4 x 3
+##   Gender       Premium Exposures
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Male      699937786.   597197.
+## 2 Female    496045301.   505905.
+## 3 Corporate 269541892.   149551.
+## 4 UNKNOWN    14466031.     7938.</pre>
 
 </article></slide><slide class=""><hgroup><h2>Tidy version of <code>rbind</code> with <code>bind_rows</code></h2></hgroup><article  id="tidy-version-of-rbind-with-bind_rows" class="smaller ">
 

@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
   error = TRUE,
   echo = TRUE,
   message = FALSE,
-  collapse = TRUE,
+  # collapse = TRUE,
   cache = TRUE)
 
 library <- function(...) {
@@ -32,7 +32,8 @@ library(tidyverse)
 
 options("tibble.print_min" = 5)
 options("tibble.print_max" = 5)
-options("tibble.max_footer_lines" = 1)
+options("tibble.max_footer_lines" = 2)
+options("tibble.max_extra_cols" = 4)
 options("tibble.width" = 60)
 
 ```
@@ -337,6 +338,22 @@ brvehins1a %>%
 
 ## Remove incomplete rows with `drop_na`
 
+Our data frame has 393,071 rows, but 83,484 observations have `NA` values
+in at least one column.  You can drop those rows quickly with `drop_na`.
+It *may not* be the right thing to do for your analysis, but the power is yours.
+
+```{r eval=FALSE}
+brvehins1a %>% 
+  drop_na()
+```
+
+If you want to only look at certain columns, you can pass any "tidy select"
+commands to `drop_na`, too.
+
+```{r eval=FALSE}
+brvehins1a %>% 
+  drop_na(Gender, DrivAge, contains('total'))
+```
 
 
 
@@ -458,7 +475,21 @@ brvehins1a %>%
 
 ## Tidy version of `rbind` with `bind_rows`
 
+The `brvehins1a` data in `CASdatasets` is actually just one-fifth of the 
+full data set.  We can get the full data in one object using `bind_rows`.
+
 ```{r}
+data(
+  brvehins1b, 
+  brvehins1c, 
+  brvehins1d,
+  brvehins1e,
+  package = 'CASdatasets')
+
+brvehins1 <- brvehins1a %>% 
+  bind_rows(brvehins1b, brvehins1c, brvehins1d, brvehins1e)
+
+dim(brvehins1)
 ```
 
 
