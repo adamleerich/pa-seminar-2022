@@ -3589,8 +3589,7 @@ brvehins1a %&gt;%
 <pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
   group_by(State) %&gt;% 
   summarize(
-    StateCount = n()) %&gt;% 
-  filter()</pre>
+    StateCount = n())</pre>
 
 <pre >## # A tibble: 28 x 2
 ##   State    StateCount
@@ -3639,7 +3638,7 @@ brvehins1a %&gt;%
 
 </article></slide><slide class=""><hgroup><h2>Sort using <code>arrange</code></h2></hgroup><article  id="sort-using-arrange" class="smaller ">
 
-<p>Sort by a column in ascending or descending order. The following is descending. Use <code>arrange(&#39;Exposures&#39;)</code> to get the default ascending order.</p>
+<p>Sort by a column in ascending or descending order. The following is descending. Use <code>arrange(Exposures)</code> to get the default ascending order.</p>
 
 <pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
   group_by(Gender) %&gt;% 
@@ -3874,7 +3873,26 @@ wide_data</pre>
 ## 3 Amazonas      8.30e6 1.06e7 1.30e7    3.20e7         0.260
 ## 4 Minas Ger~    1.53e8 1.84e8 2.64e8    6.01e8         0.254
 ## 5 Santa Cat~    7.80e7 1.03e8 1.45e8    3.26e8         0.239
-## # ... with 22 more rows</pre></article></slide>
+## # ... with 22 more rows</pre>
+
+</article></slide><slide class=""><hgroup><h2>Un-pivot to key-value example</h2></hgroup><article  id="un-pivot-to-key-value-example" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>wide_data %&gt;% 
+  pivot_longer(
+    cols = -c(&#39;State&#39;),
+    names_to = &#39;Key&#39;, 
+    values_to = &#39;Value&#39;) %&gt;% 
+  filter(
+    State == &#39;Amazonas&#39;)</pre>
+
+<pre >## # A tibble: 5 x 3
+##   State    Key                  Value
+##   &lt;fct&gt;    &lt;chr&gt;                &lt;dbl&gt;
+## 1 Amazonas Corporate      8298949.   
+## 2 Amazonas Female        10626664.   
+## 3 Amazonas Male          13032843.   
+## 4 Amazonas TotalPrem     31958456.   
+## 5 Amazonas CorporateProp        0.260</pre></article></slide>
 
 
   <slide class="backdrop"></slide>

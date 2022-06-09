@@ -416,8 +416,7 @@ brvehins1a %>%
 brvehins1a %>% 
   group_by(State) %>% 
   summarize(
-    StateCount = n()) %>% 
-  filter()
+    StateCount = n())
 ```
 
 
@@ -458,7 +457,7 @@ brvehins1a %>%
 ## Sort using `arrange`
 
 Sort by a column in ascending or descending order.  The following is descending.
-Use `arrange('Exposures')` to get the default ascending order.
+Use `arrange(Exposures)` to get the default ascending order.
 
 ```{r}
 brvehins1a %>% 
@@ -645,6 +644,19 @@ wide_data
 
 
 
+
+
+## Un-pivot to key-value example
+
+```{r}
+wide_data %>% 
+  pivot_longer(
+    cols = -c('State'),
+    names_to = 'Key', 
+    values_to = 'Value') %>% 
+  filter(
+    State == 'Amazonas')
+```
 
 
 
