@@ -3505,6 +3505,16 @@ brvehins1a %&gt;%
 
 </article></slide><slide class=""><hgroup><h2>Remove incomplete rows with <code>drop_na</code></h2></hgroup><article  id="remove-incomplete-rows-with-drop_na" class="smaller ">
 
+<p>Our data frame has 393,071 rows, but 83,484 observations have <code>NA</code> values in at least one column. You can drop those rows quickly with <code>drop_na</code>. It <em>may not</em> be the right thing to do for your analysis, but the power is yours.</p>
+
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
+  drop_na()</pre>
+
+<p>If you want to only look at certain columns, you can pass any &ldquo;tidy select&rdquo; commands to <code>drop_na</code>, too.</p>
+
+<pre class = 'prettyprint lang-r'>brvehins1a %&gt;% 
+  drop_na(Gender, DrivAge, contains(&#39;total&#39;))</pre>
+
 </article></slide><slide class=""><hgroup><h2>Extract rows using <code>slice</code></h2></hgroup><article  id="extract-rows-using-slice" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>brvehins1a %&gt;%
@@ -3649,13 +3659,222 @@ brvehins1a %&gt;%
 
 </article></slide><slide class=""><hgroup><h2>Tidy version of <code>rbind</code> with <code>bind_rows</code></h2></hgroup><article  id="tidy-version-of-rbind-with-bind_rows" class="smaller ">
 
+<p>The <code>brvehins1a</code> data in <code>CASdatasets</code> is actually just one-fifth of the full data set. We can get the full data in one object using <code>bind_rows</code>.</p>
+
+<pre class = 'prettyprint lang-r'>data(
+  brvehins1b, 
+  brvehins1c, 
+  brvehins1d,
+  brvehins1e,
+  package = &#39;CASdatasets&#39;)
+
+brvehins1 &lt;- brvehins1a %&gt;% 
+  bind_rows(brvehins1b, brvehins1c, brvehins1d, brvehins1e)
+
+dim(brvehins1)</pre>
+
+<pre >## [1] 1965355      23</pre>
+
 </article></slide><slide class=""><hgroup><h2>Combining data</h2></hgroup><article  id="combining-data" class="smaller ">
 
-</article></slide><slide class=""><hgroup><h2>Different types of joins</h2></hgroup><article  id="different-types-of-joins" class="smaller ">
+<p>There are several functions for combining data in the <code>tidyverse</code>. If you’ve used SQL, many of these will be familiar.</p>
+
+<ul>
+<li><code>inner_join</code></li>
+<li><code>left_join</code></li>
+<li><code>right_join</code></li>
+<li><code>full_join</code></li>
+<li><code>anti_join</code></li>
+<li><code>semi_join</code></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Population of States in Brazil</h2></hgroup><article  id="population-of-states-in-brazil" class="smaller ">
+
+<p>Let’s say we wanted to do a crude market penetration analysis and we have a second data set with population by State.</p>
+
+<pre class = 'prettyprint lang-r'>pop &lt;- read.csv(&#39;brazil-states.csv&#39;) %&gt;% as_tibble
+print(pop)</pre>
+
+<pre >## # A tibble: 27 x 2
+##   State    PopThousands
+##   &lt;chr&gt;           &lt;int&gt;
+## 1 Acre              888
+## 2 Alagoas          3334
+## 3 Amapa             838
+## 4 Amazonas         4147
+## 5 Bahia           14897
+## # ... with 22 more rows</pre>
+
+<pre class = 'prettyprint lang-r'>sum(pop$PopThousands) / 1000</pre>
+
+<pre >## [1] 210.017</pre>
+
+</article></slide><slide class=""><hgroup><h2><code>inner_join</code></h2></hgroup><article  id="inner_join" class="smaller ">
+
+<p>An inner join will return records only when there is a match between rows in both data sets. Joins will match automatically on columns with the same names.</p>
+
+<pre class = 'prettyprint lang-r'>count_by_state &lt;- brvehins1 %&gt;% 
+  group_by(State) %&gt;% 
+  summarize(Count = n())
+
+count_by_state %&gt;% 
+  inner_join(pop)</pre>
+
+<pre >## # A tibble: 26 x 3
+##   State    Count PopThousands
+##   &lt;chr&gt;    &lt;int&gt;        &lt;int&gt;
+## 1 Acre      6822          888
+## 2 Alagoas  24859         3334
+## 3 Amapa     5318          838
+## 4 Amazonas 20015         4147
+## 5 Bahia    58159        14897
+## # ... with 21 more rows</pre>
 
 </article></slide><slide class=""><hgroup><h2>Specify join parameters</h2></hgroup><article  id="specify-join-parameters" class="smaller ">
 
-</article></slide><slide class=""><hgroup><h2>Pivoting data</h2></hgroup><article  id="pivoting-data" class="smaller "></article></slide>
+<p>However, you can explicitly state the join-by column(s). This is safer sometimes. Also, it is the only way to do a join if the columns you want to join on have different names.</p>
+
+<pre class = 'prettyprint lang-r'>count_by_state %&gt;% 
+  inner_join(pop, by = &#39;State&#39;)</pre>
+
+<pre >## # A tibble: 26 x 3
+##   State    Count PopThousands
+##   &lt;chr&gt;    &lt;int&gt;        &lt;int&gt;
+## 1 Acre      6822          888
+## 2 Alagoas  24859         3334
+## 3 Amapa     5318          838
+## 4 Amazonas 20015         4147
+## 5 Bahia    58159        14897
+## # ... with 21 more rows</pre>
+
+</article></slide><slide class=""><hgroup><h2>Join with different column names</h2></hgroup><article  id="join-with-different-column-names" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>count_by_prov &lt;- brvehins1 %&gt;% 
+  group_by(State) %&gt;% 
+  summarize(Count = n()) %&gt;% 
+  rename(Province = State)
+
+count_by_prov %&gt;% 
+  inner_join(pop, by = c(&#39;Province&#39; = &#39;State&#39;))</pre>
+
+<pre >## # A tibble: 26 x 3
+##   Province Count PopThousands
+##   &lt;chr&gt;    &lt;int&gt;        &lt;int&gt;
+## 1 Acre      6822          888
+## 2 Alagoas  24859         3334
+## 3 Amapa     5318          838
+## 4 Amazonas 20015         4147
+## 5 Bahia    58159        14897
+## # ... with 21 more rows</pre>
+
+</article></slide><slide class=""><hgroup><h2><code>anti_join</code></h2></hgroup><article  id="anti_join" class="smaller ">
+
+<p>This is not a common join in SQL, but it can be really helpful. An anti-join tells what rows are in the left-hand data set but not in the right.</p>
+
+<pre class = 'prettyprint lang-r'>count_by_state %&gt;% 
+  anti_join(pop)</pre>
+
+<pre >## # A tibble: 2 x 2
+##   State      Count
+##   &lt;fct&gt;      &lt;int&gt;
+## 1 Sao Paulo 457773
+## 2 &lt;NA&gt;          13</pre>
+
+<pre class = 'prettyprint lang-r'>pop %&gt;% 
+  anti_join(count_by_state)</pre>
+
+<pre >## # A tibble: 1 x 2
+##   State     PopThousands
+##   &lt;chr&gt;            &lt;int&gt;
+## 1 São Paulo        45926</pre>
+
+</article></slide><slide class=""><hgroup><h2>Left and right joins</h2></hgroup><article  id="left-and-right-joins" class="smaller ">
+
+<p>Left joins are more common, but both act in a similar way. A left join returns at least one row in the result for every row that exists in the left-hand table, even if there isn’t a match.</p>
+
+<pre class = 'prettyprint lang-r'>count_by_prov %&gt;% 
+  left_join(pop, by = c(&#39;Province&#39; = &#39;State&#39;)) %&gt;% 
+  filter(str_starts(Province, &#39;S&#39;))</pre>
+
+<pre >## # A tibble: 3 x 3
+##   Province        Count PopThousands
+##   &lt;chr&gt;           &lt;int&gt;        &lt;int&gt;
+## 1 Santa Catarina 177588         7158
+## 2 Sao Paulo      457773           NA
+## 3 Sergipe         21825         2303</pre>
+
+<pre class = 'prettyprint lang-r'>count_by_prov %&gt;% 
+  right_join(pop, by = c(&#39;Province&#39; = &#39;State&#39;)) %&gt;% 
+  filter(str_starts(Province, &#39;S&#39;))</pre>
+
+<pre >## # A tibble: 3 x 3
+##   Province        Count PopThousands
+##   &lt;chr&gt;           &lt;int&gt;        &lt;int&gt;
+## 1 Santa Catarina 177588         7158
+## 2 Sergipe         21825         2303
+## 3 São Paulo          NA        45926</pre>
+
+</article></slide><slide class=""><hgroup><h2>Full joins</h2></hgroup><article  id="full-joins" class="smaller ">
+
+<p>Full joins are a mix of right and left. This is sometimes called an outer join in SQL.</p>
+
+<pre class = 'prettyprint lang-r'>count_by_state %&gt;% 
+  full_join(pop, by = &#39;State&#39;) %&gt;% 
+  filter(str_starts(State, &#39;S&#39;))</pre>
+
+<pre >## # A tibble: 4 x 3
+##   State           Count PopThousands
+##   &lt;chr&gt;           &lt;int&gt;        &lt;int&gt;
+## 1 Santa Catarina 177588         7158
+## 2 Sao Paulo      457773           NA
+## 3 Sergipe         21825         2303
+## 4 São Paulo          NA        45926</pre>
+
+</article></slide><slide class=""><hgroup><h2>Pivoting data</h2></hgroup><article  id="pivoting-data" class="smaller ">
+
+<p>Sometimes you want to turn columns into rows or groups of rows into columns. This is called pivoting.</p>
+
+<pre class = 'prettyprint lang-r'>tall_data &lt;- brvehins1 %&gt;% 
+  group_by(Gender, State) %&gt;% 
+  summarize(PremTotal = sum(PremTotal)) %&gt;% 
+  drop_na()
+
+tall_data</pre>
+
+<pre >## # A tibble: 81 x 3
+## # Groups:   Gender [3]
+##   Gender    State    PremTotal
+##   &lt;fct&gt;     &lt;fct&gt;        &lt;dbl&gt;
+## 1 Corporate Acre      1857874.
+## 2 Corporate Alagoas   6370776.
+## 3 Corporate Amapa     1568820.
+## 4 Corporate Amazonas  8298949.
+## 5 Corporate Bahia    46443173.
+## # ... with 76 more rows</pre>
+
+</article></slide><slide class=""><hgroup><h2>Wide data</h2></hgroup><article  id="wide-data" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>wide_data &lt;- tall_data %&gt;% 
+  pivot_wider(
+    id_cols = &#39;State&#39;,
+    names_from = &#39;Gender&#39;,
+    values_from = &#39;PremTotal&#39;) %&gt;% 
+  mutate(
+    TotalPrem = Corporate + Female + Male,
+    CorporateProp = Corporate / TotalPrem) %&gt;% 
+  arrange(desc(CorporateProp))
+
+wide_data</pre>
+
+<pre >## # A tibble: 27 x 6
+##   State      Corporate Female   Male TotalPrem CorporateProp
+##   &lt;fct&gt;          &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
+## 1 Rondonia      9.83e5 1.10e6 1.32e6    3.40e6         0.289
+## 2 Amapa         1.57e6 1.81e6 2.37e6    5.74e6         0.273
+## 3 Amazonas      8.30e6 1.06e7 1.30e7    3.20e7         0.260
+## 4 Minas Ger~    1.53e8 1.84e8 2.64e8    6.01e8         0.254
+## 5 Santa Cat~    7.80e7 1.03e8 1.45e8    3.26e8         0.239
+## # ... with 22 more rows</pre></article></slide>
 
 
   <slide class="backdrop"></slide>

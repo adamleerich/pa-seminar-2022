@@ -496,27 +496,156 @@ dim(brvehins1)
 
 ## Combining data
 
+There are several functions for combining data in the `tidyverse`.
+If you've used SQL, many of these will be familiar.
+
+* `inner_join`
+* `left_join`
+* `right_join`
+* `full_join`
+* `anti_join`
+* `semi_join`
+
+
+
+## Population of States in Brazil
+
+Let's say we wanted to do a crude market penetration analysis
+and we have a second data set with population by State.
+
 ```{r}
+pop <- read.csv('brazil-states.csv') %>% as_tibble
+print(pop)
+sum(pop$PopThousands) / 1000
 ```
 
 
 
-## Different types of joins
+## `inner_join`
+
+An inner join will return records only when there is a match between rows in both
+data sets.  Joins will match automatically on columns with the same names.  
 
 ```{r}
+count_by_state <- brvehins1 %>% 
+  group_by(State) %>% 
+  summarize(Count = n())
+
+count_by_state %>% 
+  inner_join(pop)
 ```
 
 
 
 ## Specify join parameters
 
+However, you can explicitly state the join-by column(s).
+This is safer sometimes.  Also, it is the only way to do a join 
+if the columns you want to join on have different names.
+
 ```{r}
+count_by_state %>% 
+  inner_join(pop, by = 'State')
 ```
+
+
+## Join with different column names
+
+```{r}
+count_by_prov <- brvehins1 %>% 
+  group_by(State) %>% 
+  summarize(Count = n()) %>% 
+  rename(Province = State)
+
+count_by_prov %>% 
+  inner_join(pop, by = c('Province' = 'State'))
+```
+
+
+
+## `anti_join`
+
+This is not a common join in SQL, but it can be really helpful.
+An anti-join tells what rows are in the left-hand data set
+but not in the right.
+
+```{r}
+count_by_state %>% 
+  anti_join(pop)
+
+pop %>% 
+  anti_join(count_by_state)
+```
+
+
+## Left and right joins
+
+Left joins are more common, but both act in a similar way.
+A left join returns at least one row in the result for every row
+that exists in the left-hand table, even if there isn't a match.
+
+```{r}
+count_by_prov %>% 
+  left_join(pop, by = c('Province' = 'State')) %>% 
+  filter(str_starts(Province, 'S'))
+
+count_by_prov %>% 
+  right_join(pop, by = c('Province' = 'State')) %>% 
+  filter(str_starts(Province, 'S'))
+```
+
+
+
+
+## Full joins
+
+Full joins are a mix of right and left.
+This is sometimes called an outer join in SQL.
+
+```{r}
+count_by_state %>% 
+  full_join(pop, by = 'State') %>% 
+  filter(str_starts(State, 'S'))
+```
+
 
 
 
 
 ## Pivoting data
 
+Sometimes you want to turn columns into rows or
+groups of rows into columns.  This is called pivoting.
+
 ```{r}
+tall_data <- brvehins1 %>% 
+  group_by(Gender, State) %>% 
+  summarize(PremTotal = sum(PremTotal)) %>% 
+  drop_na()
+
+tall_data
 ```
+
+
+## Wide data
+
+```{r}
+wide_data <- tall_data %>% 
+  pivot_wider(
+    id_cols = 'State',
+    names_from = 'Gender',
+    values_from = 'PremTotal') %>% 
+  mutate(
+    TotalPrem = Corporate + Female + Male,
+    CorporateProp = Corporate / TotalPrem) %>% 
+  arrange(desc(CorporateProp))
+
+wide_data
+```
+
+
+
+
+
+
+
